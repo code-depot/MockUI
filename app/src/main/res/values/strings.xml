@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">MockUI</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="credit_apply_menu">Apply For Credit</string>
+    <string name="message">Message</string>
+    <string name="my_loans">My Loans</string>
+
+    <string name="personal_info">Personal Information</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="pan_number">Pan Number</string>
+    <string name="app_setting">Setting</string>
+    <string name="page_number">"Page: %1$d/%2$d</string>
+
+
+    <string name="credit_info">Credit Information</string>
+    <string name="contact_info">Contact Information</string>
+    <string name="job_info">Employment Details</string>
+    <string name="upload_doc">Upload Documents</string>
+    <string name="bank_info">Bank Details</string>
+
+    <string name="phone">Mobile Number</string>
+    <string name="email">Email</string>
+    <string name="submit">Apply</string>
+    <string name="gender">Gender</string>
+
+
+
+    <string name="dob">Date Of Birth</string>
+    <string name="amount">Loan Amount</string>
+    <string name="account_number">Account Number</string>
+    <string name="ifsc_number">IFSC Number</string>
+    <string name="tenure">Loan Duration</string>
+
+    <string-array name="reason">
+        <item> Home Improvements</item>
+        <item> Security Deposit</item>
+        <item> Rent </item>
+        <item> Monthly expense</item>
+        <item> Medical Bill </item>
+    </string-array>
+    <string name="noob">Accepted Job Offer</string>
+
+    <string-array name="status_array">
+        <item> Employed </item>
+        <item>  @string/noob</item>
+
+    </string-array>
+    <string name="emp">Employer</string>
+    <string name="emp_status">Status</string>
+    <string name="emp_contact">Employer Contact</string>
+    <string name="emp_phone">Employer Phone Number</string>
+    <string name="emp_email">Employer Email</string>
+    <string name="jod">Joining Date</string>
+    <string name="monthly">Monthly Take Home Salary</string>
+
+
+</resources>

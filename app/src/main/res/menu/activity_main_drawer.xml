@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+
+        <item
+            android:id="@+id/credit_apply"
+            android:icon="@drawable/ic_action_name"
+            android:title="@string/credit_apply_menu"
+            />
+
+
+
+        <item
+            android:id="@+id/my_loans"
+            android:icon="@drawable/ic_wallet"
+            android:title="@string/my_loans" />
+
+        <item
+            android:id="@+id/message"
+            android:icon="@android:drawable/ic_dialog_email"
+            android:title="@string/message" />
+
+
+    </group>
+
+    <item android:title="Tools">
+        <menu>
+
+            <item
+                android:id="@+id/app_setting"
+                android:icon="@android:drawable/ic_menu_manage"
+                android:enabled="false"
+                android:title="@string/app_setting" />
+
+            <item
+                android:id="@+id/help"
+                android:icon="@android:drawable/ic_menu_help"
+                android:enabled="false"
+                android:title="Help" />
+
+        </menu>
+    </item>
+
+</menu>
