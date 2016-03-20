@@ -3,6 +3,7 @@ package com.easecred.android.mockui;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
@@ -28,5 +29,8 @@ public abstract  class BaseFragment extends Fragment {
     }
 
     protected abstract int getFragmentLayoutID();
+
+
+
 
 }

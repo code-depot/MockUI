@@ -30,7 +30,6 @@
     <string name="gender">Gender</string>
 
 
-
     <string name="dob">Date Of Birth</string>
     <string name="amount">Loan Amount</string>
     <string name="account_number">Account Number</string>
@@ -58,6 +57,11 @@
     <string name="emp_email">Employer Email</string>
     <string name="jod">Joining Date</string>
     <string name="monthly">Monthly Take Home Salary</string>
+
+    <string name="action_logout">Logout</string>
+
+
+    <string name="facebook_app_id">1711186065826851</string>
 
 
 </resources>

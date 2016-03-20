@@ -3,9 +3,12 @@ package com.easecred.android.mockui;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -60,6 +63,13 @@ public class CreditApplicationPersonalInfoFragment extends CreditApplicationBase
     private String mTempPhotoFile;
     private String mCropPhotoFile;
 
+
+    //ui stuff
+    private EditText mFirstName;
+    private EditText mLastName;
+    private RadioButton mMale;
+    private RadioButton mFemale;
+
     public static final int REQUEST_SNAP_IMAGE = 1;
     public static final int REQUEST_LOAD_IMAGE = 2;
     public static final int REQUEST_CROP_IMAGE = 3;
@@ -77,6 +87,7 @@ public class CreditApplicationPersonalInfoFragment extends CreditApplicationBase
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mIsCameraEnabled = CreditPhotoUtils.isCameraIntentRegistered((BaseActivity) getActivity());
+
 
         if(mIsCameraEnabled) {
             mTempPhotoFile = getClickedPhotoPath();
@@ -107,7 +118,7 @@ public class CreditApplicationPersonalInfoFragment extends CreditApplicationBase
             @Override
             public void onClick(View v) {
                 DialogFragment fragment = new DatePickerFragment();
-                fragment.setTargetFragment(CreditApplicationPersonalInfoFragment.this,0);
+                fragment.setTargetFragment(CreditApplicationPersonalInfoFragment.this, 0);
                 fragment.show(getActivity().getSupportFragmentManager(), "DatePicker");
             }
 
@@ -120,8 +131,30 @@ public class CreditApplicationPersonalInfoFragment extends CreditApplicationBase
         mProfileButton.setOnClickListener(new PhotoClick());
         mPhotoIcon.setOnClickListener(new PhotoClick());
 
+        mFirstName = (EditText)v.findViewById(R.id.first_name);
+        mLastName = (EditText)v.findViewById(R.id.last_name);
+        mMale = (RadioButton)v.findViewById(R.id.male);
+        mFemale = (RadioButton)v.findViewById(R.id.female);
+        onProfileUpdate();
+
         return v;
     }
+
+
+        public void onProfileUpdate() {
+            UserAccountInfo profile  = UserAccountInfo.getInstance();
+
+            mFirstName.setText(profile.getFirstName());
+            mLastName.setText(profile.getLastName());
+            if(profile.getGender() == UserAccountInfo.Gender.FEMALE) {
+                mFemale.setChecked(true);
+            }
+            else {
+                mMale.setChecked(true);
+            }
+       }
+
+
 
     public void onPhotoOK(UploadPhotoDialog.PhotoChoice choice) {
 
@@ -225,8 +258,7 @@ public class CreditApplicationPersonalInfoFragment extends CreditApplicationBase
                     } else if (checkedId == R.id.upload) {
                         Log.d("personalinfo", "upload");
                         mPhotoChoice = PhotoChoice.UPLOAD;
-                    }
-                    else if (checkedId == R.id.remove) {
+                    } else if (checkedId == R.id.remove) {
                         Log.d("personalinfo", "remove");
                         mPhotoChoice = PhotoChoice.REMOVE;
                     }
@@ -234,7 +266,7 @@ public class CreditApplicationPersonalInfoFragment extends CreditApplicationBase
             });
 
 
-            AlertDialog  alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), android.R.style.Theme_Material_Dialog))
+            AlertDialog  alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(),android.R.style.Theme_Holo_Dialog))
                     .setTitle("Update Photo")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
@@ -286,17 +318,18 @@ public class CreditApplicationPersonalInfoFragment extends CreditApplicationBase
                     finally {
                         Closeables.closeQuietly(in);
                     }
+                    break;
 
                 case REQUEST_CROP_IMAGE:
                     final Uri cropUri;
                     if (data != null && data.getData() != null) {
                         Uri extUri = data.getData();
                         cropUri = Uri.fromFile(new File(mCropPhotoFile));
-                        Log.d("PersonalInfo", "strring data" + cropUri.toString() + " path " + cropUri.getPath());
+                        Log.d("PersonalInfo", "load crop data file" + cropUri.toString() + " path " + cropUri.getPath());
                         CreditPhotoUtils.savePhotoFromUriToUri(getActivity(),extUri,cropUri,false);
                     } else {
                         cropUri = Uri.fromFile(new File(mCropPhotoFile));
-                        Log.d("PersonalInfo", "strring" + cropUri.toString() + " path " + cropUri.getPath());
+                        Log.d("PersonalInfo", "load crop default file" + cropUri.toString() + " path " + cropUri.getPath());
                     }
 
                     try {
@@ -318,5 +351,34 @@ public class CreditApplicationPersonalInfoFragment extends CreditApplicationBase
 
         return 720;
     }
+
+
+    private BroadcastReceiver mOnLoginComplete = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent filter) {
+            int loginStatus = filter.getIntExtra(LoginManager.MOCK_UI_EVENTS,LoginManager.PROFILE_UPDATE_FAILED);
+
+            if(loginStatus == LoginManager.PROFILE_UPDATE_SUCCESS) {
+                onProfileUpdate();
+
+            }
+
+        }
+    };
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter(LoginManager.LOGIN_NOTIFCATION);
+        getActivity().registerReceiver(mOnLoginComplete, filter);
+    }
+
+    @Override
+    public void onStop() {
+        getActivity().unregisterReceiver(mOnLoginComplete);
+        super.onStop();
+    }
+
 
 }

@@ -4,30 +4,42 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.support.v4.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+
 
 import java.util.List;
 
 public  abstract class BaseActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,LoginManager.LoginListener {
+
+    private LoginManager mLoginManager;
+    private static final String TAG = "BaseActivity";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        mLoginManager = new LoginManager(getApplicationContext());
+        mLoginManager.setLoginListener(this);
+
+        Log.d(TAG, "User Logged State:" + mLoginManager.isLogged());
+        if(!mLoginManager.isLogged()) {
+            startLoginActivity();
+        }
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -50,6 +62,7 @@ public  abstract class BaseActivity extends AppCompatActivity
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment f = fm.findFragmentById(R.id.fragment_container);
+
         if(f == null) {
             f = getFragmentInstance();
             fm.beginTransaction().add(R.id.fragment_container,f).commit();
@@ -83,7 +96,8 @@ public  abstract class BaseActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+            mLoginManager.logout();
             return true;
         }
 
@@ -127,4 +141,43 @@ public  abstract class BaseActivity extends AppCompatActivity
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        mLoginManager.preserveMockUIAppState();
+        super.onPause();
+
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    public LoginManager getLoginManager() {
+        return  mLoginManager;
+    }
+
+
+    @Override
+    public void onLogin() {}
+
+    @Override
+    public void onLogout() {
+       startLoginActivity();
+    }
+
+    private void startLoginActivity() {
+        Intent intent = new Intent(this,LoginActivity.class);
+        intent.setFlags(intent.getFlags());
+        startActivity(intent);
+        finish();
+    }
 }
